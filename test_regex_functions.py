@@ -1,0 +1,100 @@
+from regex_functions import *
+
+print("------------ should print TRUE--------------")
+print(is_regex("0"))
+print(is_regex("1"))
+print(is_regex("2"))
+print(is_regex("e"))
+print(is_regex("0*"))
+print(is_regex("1*"))
+print(is_regex("2*"))
+print(is_regex("e*"))
+print(is_regex("(0|1)"))
+print(is_regex("(1.2)"))
+print(is_regex("(e|0)"))
+print(is_regex("(2.e)"))
+print(is_regex("(0*|2*)"))
+print(is_regex("((0.1).2)"))
+print(is_regex("((1.(0|2)*).0)"))
+print(is_regex('((1.(0|2)*).((1*.(2.e*))*.0))'))
+print(is_regex('((0*.(0**|e)*)*.(((0*|(1.e*))*.0)**.1*))'))
+print(is_regex('(((0*.(0**|e)*)*.(((0*|(1.e*))*.0)**.1*)).((2*.(0*|1*)).(((2*|(2*.e*))*.0)**.e*)))'))
+print(is_regex('0'))
+print(is_regex('1*'))
+print(is_regex('2***'))
+print(is_regex('(((0*.1)|2).(e|0*))'))
+print(is_regex("(0|1)*"))
+print(is_regex("1******************"))
+
+
+print("------------ should print FALSE--------------")
+print(is_regex('(((0*.(0|e)*)*.(((1.e*))*.0)).0)'))
+print(is_regex('(((0*.(0**|e)*)*.(((0*|(1.e*))*.0)*.1*)*)).((2*.(0*|1*)).(((0*|(2*.e*))*.0)**.e*)))'))
+print(is_regex('((1.(1*|(0|e**))*.(0*|(1.e*))*.0)*.1)).((2*.(0*)).(((0*|(2*.e*))*.0)**.e*)))'))
+print(is_regex('(((0*.(3|e)*)*.(((3.e*))*.3)).3)'))
+print(is_regex("span"))
+print(is_regex("3|2"))
+print(is_regex("1|2"))
+print(is_regex('(((0*.1)|2.(e|0*))'))
+print(is_regex("("))
+print(is_regex('*2'))
+print(is_regex("(1*)*"))
+print(is_regex("((0|1)|(2|0)|(1|2))"))
+print(is_regex("*******************"))
+print(is_regex("2*3"))
+print(is_regex("2|3"))
+print(is_regex("(2|1)***.(2.1)"))
+
+print("***************is_regex***********should print true")
+
+print(is_regex('((1.(0|2)*).((1*.(2.e*))*.0))') == True)
+print(is_regex('(((0*.(0|e)*)*.(((1.e*))*.0)).0)') == False)
+print(is_regex('((0*.(0**|e)*)*.(((0*|(1.e*))*.0)**.1*))') == True)
+print(is_regex('(((0*.(0**|e)*)*.(((0*|(1.e*))*.0)**.1*)).'
+               '((2*.(0*|1*)).(((0*|(2*.e*))*.0)**.e*)))') == True)
+print(is_regex('(((0*.(0**|e)*)*.(((0*|(1.e*))*.0)*.1*)*)).'
+               '((2*.(0*|1*)).(((0*|(2*.e*))*.0)**.e*)))') == False)
+print(is_regex('((1.(1*|(0|e**))*.(0*|(1.e*))*.0)*.1)).'
+               '((2*.(0*)).(((0*|(2*.e*))*.0)**.e*)))') == False)
+
+
+print("***************permutations**************should print true")
+print(all_regex_permutations('spam') == set())
+print(all_regex_permutations('**1*') == {'1***'})
+print(all_regex_permutations('**1*0') == set())
+print(all_regex_permutations('(0|1') == set())
+#print(all_regex_permutations('(0|1)()()()()') == set())
+print(all_regex_permutations('01*|()') == {'(0*|1)', '(0|1*)', '(1*|0)', '(1|0*)', '(1|0)*', '(0|1)*'})
+
+
+
+print("***************build regex tree*************should print true")
+print(build_regex_tree('((1.(0|2)*).((1*.(2.e*))*.0))') == DotTree(DotTree(Leaf('1'), StarTree(BarTree(Leaf('0'), Leaf('2')))), DotTree(StarTree(DotTree(StarTree(Leaf('1')), DotTree(Leaf('2'), StarTree(Leaf('e'))))), Leaf('0'))))
+
+print(build_regex_tree("(0*|2*)")==BarTree(StarTree(Leaf('0')), StarTree(Leaf('2'))))
+
+print(build_regex_tree('(((0*.(0**|e)*)*.(((0*|(1.e*))*.0)**.1*)).((2*.(0*|1*)).(((2*|(2*.e*))*.0)**.e*)))')==DotTree(DotTree(StarTree(DotTree(StarTree(Leaf('0')), StarTree(BarTree(StarTree(StarTree(Leaf('0'))), Leaf('e'))))), DotTree(StarTree(StarTree(DotTree(StarTree(BarTree(StarTree(Leaf('0')), DotTree(Leaf('1'), StarTree(Leaf('e'))))), Leaf('0')))), StarTree(Leaf('1')))), DotTree(DotTree(StarTree(Leaf('2')), BarTree(StarTree(Leaf('0')), StarTree(Leaf('1')))), DotTree(StarTree(StarTree(DotTree(StarTree(BarTree(StarTree(Leaf('2')), DotTree(StarTree(Leaf('2')), StarTree(Leaf('e'))))), Leaf('0')))), StarTree(Leaf('e'))))))
+
+
+
+print("***************regex match**************should print true")
+print(regex_match(Leaf('1'), '1') ==  True)
+print(regex_match(Leaf('1'), '10') ==  False)
+print(regex_match(Leaf('e'), '') ==  True)
+print(regex_match(Leaf('0'), '0') ==  True)
+print(regex_match(Leaf('0'), '1') ==  False)
+print(regex_match(StarTree(Leaf('0')), '') ==  True)
+print(regex_match(StarTree(Leaf('0')), '000') ==  True)
+print(regex_match(StarTree(Leaf('0')), '000010') ==  False)
+print(regex_match(BarTree(Leaf('1'), StarTree(Leaf('0'))), '1') ==  True)
+print(regex_match(BarTree(Leaf('1'), StarTree(Leaf('0'))), '0000') == True)
+print(regex_match(BarTree(Leaf('1'), StarTree(Leaf('0'))), '01') ==  False)
+print(regex_match(DotTree(StarTree(Leaf('1')), Leaf('0')), '0') ==  True)
+print(regex_match(DotTree(StarTree(Leaf('1')), Leaf('0')), '111110') == True)
+print(regex_match(DotTree(StarTree(Leaf('1')), Leaf('0')), '1') ==  False)
+print(regex_match(build_regex_tree('((1.(0|1)*).2)'), '10110012') == True)
+print(regex_match(build_regex_tree('((1.(0|1)*).2)'), '12') == True)
+print(regex_match(build_regex_tree('((1.(0|1)*).2)'), '21') == False)
+print(regex_match(build_regex_tree('((1.(0|1)*).2)'), '122') == False)
+print(regex_match(build_regex_tree('(((1.(0|1)*).2)|e)'), '') == True)
+print(regex_match(build_regex_tree('((0*|1*)*.2)'), '000112') == True)
